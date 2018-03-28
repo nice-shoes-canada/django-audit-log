@@ -1,4 +1,4 @@
-from django.db.models import signals
+rom django.db.models import signals
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import curry
 
@@ -29,7 +29,7 @@ class UserLoggingMiddleware(MiddlewareMixin):
         if settings.DISABLE_AUDIT_LOG:
             return
         if not request.method in ('GET', 'HEAD', 'OPTIONS', 'TRACE'):
-            if hasattr(request, 'user') and request.user.is_authenticated:
+            if hasattr(request, 'user') and request.user.is_authenticated():
                 user = request.user
             else:
                 user = None
@@ -103,7 +103,7 @@ class JWTAuthMiddleware(MiddlewareMixin):
         from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
         user = get_user(request)
-        if user.is_authenticated:
+        if user.is_authenticated():
             return user
         try:
             user_jwt = JSONWebTokenAuthentication().authenticate(Request(request))
@@ -117,6 +117,7 @@ class JWTAuthMiddleware(MiddlewareMixin):
         from django.utils.functional import SimpleLazyObject
         assert hasattr(request, 'session'),\
         """The Django authentication middleware requires session middleware to be installed.
-         Edit your MIDDLEWARE setting to insert 'django.contrib.sessions.middleware.SessionMiddleware'."""
+         Edit your MIDDLEWARE_CLASSES setting to insert 'django.contrib.sessions.middleware.SessionMiddleware'."""
 
         request.user = SimpleLazyObject(lambda: self.get_user_jwt(request))
+
